@@ -1,0 +1,58 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: users-template
+  annotations:
+    description: Template to bootstrap users on OCP clusters.
+    tags: users,bootstrap
+    iconClass: icon-rh-openjdk
+    openshift.io/provider-display-name: Red Hat, Inc.
+    openshift.io/support-url: https://access.redhat.com
+labels:
+  template: users-template
+objects:
+- apiVersion: project.openshift.io/v1
+  kind: Project
+  metadata:
+    name: "user${USERID}"
+    annotations:
+      openshift.io/description: "This project is a greenfield for the user #${USERID} to create OCP resources"
+      openshift.io/display-name: "User${USERID}"
+- kind: Group
+  apiVersion: user.openshift.io/v1
+  metadata:
+    name: "user${USERID}"
+  users:
+    - "user${USERID}"
+- kind: RoleBinding
+  apiVersion: rbac.authorization.k8s.io/v1
+  metadata:
+    name: admin
+    namespace: "user${USERID}"
+  subjects:
+    - kind: Group
+      apiGroup: rbac.authorization.k8s.io
+      name: "user${USERID}"
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: admin
+- apiVersion: v1
+  kind: ResourceQuota
+  metadata:
+    name: user-resource-quota
+    namespace: "user${USERID}"
+  spec:
+    hard:
+      pods: "10" 
+      requests.cpu: "10" 
+      requests.memory: 20Gi 
+      limits.cpu: "10" 
+      limits.memory: "20Gi" 
+    scopes:
+    # Only for long running pods, not builds
+    - NotTerminating
+parameters:
+  - name: USERID
+    description: The name of the project created for the user
+    required: true
