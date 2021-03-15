@@ -1,0 +1,27 @@
+= OCP Workshops Provisioner
+Álvaro López Medina <alopezme@redhat.com>
+v1.0, 2021-03
+// Create TOC wherever needed
+:toc: macro
+:sectanchors:
+:sectnumlevels: 2
+:sectnums: 
+:source-highlighter: pygments
+:imagesdir: images
+// Start: Enable admonition icons
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+ifndef::env-github[]
+:icons: font
+endif::[]
+// End: Enable admonition icons
+
+
+This repository contains useful scripts to autoprovision workshops on OCP clusters. 
+
+
